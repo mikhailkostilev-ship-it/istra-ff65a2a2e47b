@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Карта клуба ИСТРА</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=Unbounded:wght@500;700&display=swap">
+<style>
+/* Layout: one grid for every block — a 150px label column and three level columns, so Open / Business / Private line up from the coordinates down to the tracks. */
+:root {
+  --bg: #f3f5f2;
+  --paper: #ffffff;
+  --ink: #17231f;
+  --muted: #5b6b65;
+  --rule: #d5ddd8;
+  --l1: #e3eeea;          /* Open */
+  --l2: #a9cbbd;          /* Business */
+  --l3: #2f5d50;          /* Private */
+  --l3-ink: #f2f7f4;
+  --accent: #b5652a;      /* individual strategy */
+  --font-display: "Unbounded", "Golos Text", system-ui, sans-serif;
+  --font-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121a17; --paper: #1a2420; --ink: #e6eeea; --muted: #9db0a8; --rule: #2e3c37;
+    --l1: #23332d; --l2: #3f6b5c; --l3: #8fc4b0; --l3-ink: #10201a; --accent: #e09a5f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #121a17; --paper: #1a2420; --ink: #e6eeea; --muted: #9db0a8; --rule: #2e3c37;
+  --l1: #23332d; --l2: #3f6b5c; --l3: #8fc4b0; --l3-ink: #10201a; --accent: #e09a5f;
+  color-scheme: dark;
+}
+body {
+  background: var(--bg); color: var(--ink); font-family: var(--font-body);
+  font-size: 15px; line-height: 1.45;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 64px;
+}
+.wrap { max-width: 1100px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2 { font-family: var(--font-display); font-weight: 700; text-wrap: balance; margin: 0; }
+h1 { font-size: clamp(24px, 4vw, 40px); line-height: 1.08; letter-spacing: -0.01em; }
+h2 { font-size: 19px; line-height: 1.25; }
+h3 { margin: 0; font-size: 15px; font-weight: 700; }
+p { margin: 0; }
+.lead { max-width: 64ch; color: var(--muted); font-size: 16px; }
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); font-weight: 600; }
+.block { display: grid; gap: 14px; }
+.btitle { display: grid; gap: 4px; }
+.btitle p { color: var(--muted); font-size: 14px; max-width: 70ch; }
+
+/* shared grid */
+.g4 { display: grid; grid-template-columns: 150px repeat(3, minmax(0, 1fr)); gap: 12px; }
+.lab { font-weight: 600; font-size: 14px; padding-top: 10px; }
+.lab em { display: block; font-style: normal; font-weight: 400; font-size: 12px; color: var(--muted); }
+.cell { padding: 10px 12px; border-radius: 10px; background: var(--paper); border: 1px solid var(--rule); font-size: 14px; min-width: 0; display: grid; gap: 3px; align-content: start; }
+.cell b { font-weight: 600; }
+.cell small { font-size: 12px; color: var(--muted); }
+.span3 { grid-column: 2 / -1; }
+.o { background: var(--l1); color: var(--ink); }
+.b { background: var(--l2); color: var(--ink); }
+.p { background: var(--l3); color: var(--l3-ink); }
+
+/* principles */
+.principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.pr { background: var(--paper); border: 1px solid var(--rule); border-radius: 12px; padding: 16px; display: grid; gap: 6px; align-content: start; }
+.pr .n { font-family: var(--font-display); font-size: 13px; color: var(--accent); }
+.pr p { font-size: 14px; color: var(--muted); }
+
+/* level plates */
+.plate { border-radius: 10px; padding: 12px 14px; display: grid; gap: 2px; cursor: pointer; border: 0; text-align: left; font: inherit; color: inherit; }
+.plate .name { font-family: var(--font-display); font-weight: 700; font-size: 18px; }
+.plate .who { font-size: 13px; }
+.plate:focus-visible, .vl:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+[data-tier] { transition: opacity .25s ease; }
+:root[data-focus="o"] [data-tier]:not([data-tier="o"]),
+:root[data-focus="b"] [data-tier]:not([data-tier="b"]),
+:root[data-focus="p"] [data-tier]:not([data-tier="p"]) { opacity: .3; }
+
+/* value layers as switches */
+.layers { display: grid; gap: 8px; }
+.vl { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; gap: 14px; align-items: center; border-radius: 12px; padding: 14px 16px; border: 2px solid transparent; background: var(--paper); text-align: left; font: inherit; color: inherit; cursor: pointer; }
+.vl .num { font-family: var(--font-display); font-size: 22px; font-weight: 700; color: var(--muted); }
+.vl h3 { font-size: 16px; }
+.vl p { font-size: 14px; color: var(--muted); }
+.vl .go { font-size: 13px; color: var(--muted); }
+.vl { cursor: default; }
+.vl-muted { opacity: .55; }
+.vl[aria-pressed="true"] { border-color: var(--accent); }
+.vl[aria-pressed="true"] .num, .vl[aria-pressed="true"] h3 { color: var(--accent); }
+.vl[aria-pressed="true"] .go { color: var(--accent); font-weight: 600; }
+
+/* rows of the levels table that belong to a layer */
+[data-lr] { transition: opacity .25s ease; }
+:root[data-layer="1"] [data-lr]:not([data-lr="1"]),
+:root[data-layer="2"] [data-lr]:not([data-lr="2"]),
+:root[data-layer="3"] [data-lr]:not([data-lr="3"]) { opacity: .35; }
+:root[data-layer="1"] [data-lr="1"].cell,
+:root[data-layer="2"] [data-lr="2"].cell,
+:root[data-layer="3"] [data-lr="3"].cell { border-color: var(--accent); }
+.lvlhead { font-family: var(--font-display); font-weight: 700; font-size: 17px; border-radius: 10px; padding: 10px 12px; }
+.lvlhead small { display: block; font-family: var(--font-body); font-weight: 400; font-size: 12px; opacity: .8; }
+.tbl { row-gap: 0; }
+.tbl > .cell { background: transparent; border: 0; border-top: 1px solid var(--rule); border-radius: 0; padding: 12px 4px; }
+.tbl > .lab { border-top: 1px solid var(--rule); padding-top: 12px; padding-bottom: 12px; }
+.tbl > .plate, .tbl > .lvlhead { margin-bottom: 10px; }
+.jtbd { font-style: italic; }
+.price { font-family: var(--font-display); font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* layer panels */
+.panel { display: grid; gap: 14px; border-top: 2px solid var(--accent); padding-top: 18px; }
+.panel[hidden] { display: none; }
+
+/* I-STRA */
+.wedge { height: 26px; background: var(--accent); clip-path: polygon(0 44%, 100% 0, 100% 100%, 0 56%); }
+.istra .cell { background: transparent; border: 0; border-top: 1px solid var(--rule); border-radius: 0; padding: 10px 2px; }
+.istra .lab { border-top: 1px solid var(--rule); }
+.strong { color: var(--accent); font-weight: 600; }
+.bracket { border: 2px solid var(--accent); border-radius: 10px; padding: 8px 10px; font-weight: 600; }
+.when { display: block; width: fit-content; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; border-radius: 4px; padding: 1px 6px; margin-bottom: 3px; }
+.when.now { background: var(--l2); color: var(--ink); }
+.when.later { border: 1px dashed var(--muted); color: var(--muted); margin-top: 6px; }
+.desc { display: none; font-size: 13px; color: var(--muted); }
+:root[data-desc="on"] .desc { display: block; }
+.more-btn { justify-self: start; font: 600 13px var(--font-body); color: var(--accent); background: transparent; border: 1px solid var(--accent); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+.more-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.bracket small { display: block; font-weight: 400; font-size: 12px; color: var(--muted); }
+.oq-mark { display: inline-block; margin-left: 5px; font: 600 11px var(--font-body); color: var(--accent); border: 1px dashed var(--accent); border-radius: 4px; padding: 0 4px; line-height: 1.4; vertical-align: middle; }
+.istra .cell.empty { color: var(--muted); font-style: italic; }
+.common { border: 2px solid var(--accent); border-radius: 12px; padding: 14px 16px; display: grid; gap: 10px; }
+.common-head { font: 600 12px var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--accent); }
+.common-items { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px 16px; font-size: 14px; }
+.common-items b { display: block; }
+.oq { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.oq h3 { color: var(--ink); font-size: 14px; }
+.oq ol { margin: 0; padding-left: 20px; display: grid; gap: 3px; }
+.ai { border: 1px dashed var(--accent); border-radius: 10px; padding: 10px 14px; font-size: 14px; }
+
+/* tracks */
+.track { display: grid; gap: 8px; }
+.tname { font-family: var(--font-display); font-size: 16px; display: flex; flex-wrap: wrap; gap: 4px 10px; align-items: baseline; padding-bottom: 6px; border-bottom: 1px solid var(--rule); }
+.tname span { font-family: var(--font-body); font-weight: 400; font-size: 13px; color: var(--muted); }
+.gen { font-size: 12px; color: var(--muted); }
+.human .cell { background: var(--l1); border-color: transparent; }
+.human .tbl > .cell { background: transparent; border-top-color: var(--rule); }
+.theme.star { box-shadow: inset 3px 0 0 var(--accent); }
+.star-note { font-size: 13px; color: var(--muted); margin: 2px 0 0; }
+.star-note a, .pr a { color: var(--accent); }
+.sub { font-size: 11px; font-weight: 500; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-top: 6px; }
+.sub:first-child { margin-top: 0; }
+.theme { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+
+.more { border-top: 2px solid var(--ink); padding-top: 24px; display: grid; gap: 20px; }
+.tag { font-size: 13px; color: var(--muted); }
+.thesis { background: var(--l3); color: var(--l3-ink); border-radius: 14px; padding: 20px 22px; display: grid; gap: 8px; }
+.note { font-size: 12px; color: var(--muted); }
+
+@media (max-width: 760px) {
+  .g4, .principles { grid-template-columns: minmax(0, 1fr); }
+  .span3 { grid-column: 1; }
+  .g4 > .lab:empty, .levels-head, .g4 > .spacer { display: none; }
+  .theme { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .vl { grid-template-columns: 36px minmax(0, 1fr); }
+  .vl .go { display: none; }
+  [data-l]::before { content: attr(data-l); display: block; font: 600 11px var(--font-body); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 3px; }
+  .istra .lab { border-top: 2px solid var(--ink); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">СберУниверситет · Центр развития сообществ · черновик 26.10.2026</div>
+    <h1>ИСТРА — среда развития, где у каждого свой вектор</h1>
+    <p class="lead"><b>Замысел.</b> ИСТРА — среда развития СберУниверситета для руководителей: здесь человек понимает, куда он растёт, собирает свою индивидуальную стратегию и живёт по ней рядом с людьми своего уровня.</p>
+    <p class="lead"><b>Подход.</b> Три уровня по позиции в карьере с учётом этапа жизни. На каждом — своя повестка, свои форматы и своя глубина работы. Для первых лиц среда работает как закрытый клуб.</p>
+  </header>
+
+  <!-- 1. Principles -->
+  <section class="block">
+    <div class="btitle"><div class="eyebrow">Три принципа</div></div>
+    <div class="principles">
+      <div class="pr"><span class="n">01</span><h3>Уровень — по задаче в карьере</h3><p>Позиция определяет, что человеку нужно сейчас. Возраст, поколение и капитал — ориентир, а не фильтр.</p></div>
+      <div class="pr"><span class="n">02</span><h3>Карьера разводит, жизнь объединяет</h3><p>Карьерная повестка у каждого уровня своя. Личные темы — ресурс, окружение, смысл — общие, на них уровни встречаются.</p></div>
+      <div class="pr"><span class="n">03</span><h3>У каждого свой вектор</h3><p>Помогаем понять, куда расти, собрать план и держать курс — с той глубиной, которая нужна человеку сейчас. <a href="https://claude.ai/artifact/LBNCFnLNKjzW72X5u7mZMu">Как это устроено</a></p></div>
+    </div>
+  </section>
+
+  <!-- 2. Coordinates -->
+  <section class="block">
+    <div class="btitle"><div class="eyebrow">Система координат</div><h2>Позиция задаёт уровень, зрелость — личную повестку</h2><p>Нажмите на уровень, чтобы выделить его на всей странице.</p></div>
+    <div class="g4 tbl">
+      <div class="spacer"></div>
+      <button type="button" class="plate o" data-tier="o" data-focus-btn="o" aria-pressed="false"><span class="name">Open</span><span class="who">чаще 25–35 лет · как СберПремьер</span></button>
+      <button type="button" class="plate b" data-tier="b" data-focus-btn="b" aria-pressed="false"><span class="name">Business</span><span class="who">чаще 35–50 лет · как СберПервый</span></button>
+      <button type="button" class="plate p" data-tier="p" data-focus-btn="p" aria-pressed="false"><span class="name">Private</span><span class="who">чаще 45+ · как Sber Private</span></button>
+
+      <div class="lab">Позиция<em>Leadership Pipeline: на каждом переходе меняются навыки, время и то, что считаешь своей работой</em></div>
+      <div class="cell" data-tier="o" data-l="Open"><b>Специалист</b><small>результат своими руками</small><b>Руководитель группы</b><small>результат через людей</small><b>Руководитель руководителей</b><small>выбирать и растить руководителей</small></div>
+      <div class="cell" data-tier="b" data-l="Business"><b>Руководитель функции</b><small>стратегия функции, вес в правлении</small><b>Руководитель бизнеса, CEO</b><small>думать прибылью, а не функцией</small></div>
+      <div class="cell" data-tier="p" data-l="Private"><b>Руководитель группы компаний</b><small>портфель, капитал, растить гендиректоров</small><b>Первое лицо корпорации</b><small>видение, внешний мир, преемник</small><b>Собственник, совет директоров, инвестор</b></div>
+
+      <div class="lab">Ключевая идея</div>
+      <div class="cell" data-tier="o" data-l="Open"><span class="sub">карьера</span><b>Состояться как управленец</b><span class="sub">лично</span><b>Доказать себе и найти своё</b></div>
+      <div class="cell" data-tier="b" data-l="Business"><span class="sub">карьера</span><b>Вырасти из функции в бизнес</b><span class="sub">лично</span><b>Построить и удержать баланс</b></div>
+      <div class="cell" data-tier="p" data-l="Private"><span class="sub">карьера</span><b>Управлять через других первых лиц</b><span class="sub">лично</span><b>Подняться на вторую гору: смысл и вклад</b></div>
+    </div>
+  </section>
+
+  <!-- 3. Value layers -->
+  <section class="block">
+    <div class="btitle"><div class="eyebrow">Как создаём ценность</div><h2>Два слоя: среда и программы</h2></div>
+    <div class="layers">
+      <div class="vl"><span class="num">1</span><span><h3>Среда развития — живи вместе с нами</h3><p>мероприятия и люди: ритм, свой круг, повестка под твой уровень</p></span><span class="go">повестка ниже ↓</span></div>
+      <div class="vl vl-muted"><span class="num">2</span><span><h3>Программы, продукты и сервисы СУ — выбирай, где заглубиться</h3><p>от открытого слота до флагманской программы</p></span><span class="go">в проработке</span></div>
+    </div>
+  </section>
+
+  <!-- 4. Levels -->
+  <section class="block">
+    <div class="btitle"><div class="eyebrow">Тарифы</div><h2>Каждый уровень стоит на предыдущем и добавляет своё</h2></div>
+    <div class="g4 tbl">
+      <div class="lab levels-head"></div>
+      <div class="lvlhead o levels-head" data-tier="o">Open</div>
+      <div class="lvlhead b levels-head" data-tier="b">Business</div>
+      <div class="lvlhead p levels-head" data-tier="p">Private</div>
+
+      <div class="lab">Среда</div>
+      <div class="cell" data-tier="o" data-l="Open">онлайн и открытые мероприятия<small>30–40 в год</small></div>
+      <div class="cell" data-tier="b" data-l="Business">очные клубные форматы, открытые слоты на программах<small>30–40 в год</small></div>
+      <div class="cell" data-tier="p" data-l="Private">очные закрытые встречи, персональные сервисы<small>4–10 в год</small></div>
+
+      <div class="lab">Ценность</div>
+      <div class="cell" data-tier="o" data-l="Open"><b>Не выпасть из развития</b>регулярный ритм, свежая повестка и понятный следующий шаг</div>
+      <div class="cell" data-tier="b" data-l="Business"><b>Расти среди равных</b>повестка под твой масштаб ответственности и люди, с которыми можно честно сверяться</div>
+      <div class="cell" data-tier="p" data-l="Private"><b>Следующий этап со смыслом</b>личное сопровождение и круг первых лиц, с которыми можно думать о капитале, наследии и вкладе</div>
+
+      <div class="lab">Задача СУ</div>
+      <div class="cell jtbd" data-tier="o" data-l="Open">«Познакомить с СУ и привести к первой программе»</div>
+      <div class="cell jtbd" data-tier="b" data-l="Business">«Удержать выпускников и вернуть их в программы»</div>
+      <div class="cell jtbd" data-tier="p" data-l="Private">«Открыть дорогу к флагманским программам и сервисам»</div>
+
+      <div class="lab">Вход</div>
+      <div class="cell" data-tier="o" data-l="Open">Сбер ID и стандартный профиль</div>
+      <div class="cell" data-tier="b" data-l="Business">+ интервью и расширенный профиль</div>
+      <div class="cell" data-tier="p" data-l="Private">персональная адмиссия</div>
+
+      <div class="lab">Цена</div>
+      <div class="cell" data-tier="o" data-l="Open"><span class="price">9 900 ₽ / год</span><small>выпускникам СУ — 1 ₽</small></div>
+      <div class="cell" data-tier="b" data-l="Business"><span class="price">420 000 ₽ / год</span><small>выпускникам — лимитированный доступ и спецоффер</small></div>
+      <div class="cell" data-tier="p" data-l="Private"><span class="price">TBD</span><small>собираем позже</small></div>
+    </div>
+  </section>
+
+  <!-- 5. Agenda of the environment -->
+  <section class="block">
+    <div class="btitle"><div class="eyebrow">Среда развития</div><h2>Повестка: четыре трека</h2><p>Треки 1–3 строим в партнёрстве с академиями СберУниверситета и Сбером и опираемся на суперсилы Сбера: деньги, технологии, лидерство. Тема в них растёт вместе с позицией человека («Карьера») и с его зрелостью («Лично»). Трек 4 «Человек» делаем с внешними партнёрами и выходим за пределы Сбера; его события открыты всем уровням.</p><button type="button" class="more-btn" id="toggle-desc" aria-pressed="false">Показать подробности</button></div>
+
+    <div class="track">
+      <h3 class="tname">Трек 1 — Финансы <span>деньги как язык решений</span></h3>
+      <div class="g4 tbl">
+        <div class="lab">Карьера</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>Деньги своего участка</b><span class="desc">бюджет и экономика проекта, финансы для нефинансиста</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>От бюджета к P&amp;L и стоимости</b><span class="desc">инвестиционные решения, капитал и долг, разговор с акционером</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>Капитал группы</b><span class="desc">аллокация между бизнесами, сделки, стоимость бизнеса</span></div>
+        <div class="lab">Лично</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>Навести порядок</b><span class="desc">подушка, семейный бюджет, кредиты без ошибок, первые инвестиции</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>Выстроить личный капитал</b><span class="desc">портфель, бонусы и опционы, налоги, пенсия как стратегия</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>Сохранить и передать</b><span class="desc">семейный капитал, наследование, венчур, филантропия</span></div>
+      </div>
+    </div>
+
+    <div class="track">
+      <h3 class="tname">Трек 2 — Технологии <span>ИИ и данные</span></h3>
+      <div class="g4 tbl">
+        <div class="lab">Карьера</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>ИИ в моей работе</b><span class="desc">инструменты и автоматизация для себя и команды</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>ИИ в моей компании</b><span class="desc">смена модели бизнеса, окупаемость, киберриски</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>ИИ в отрасли</b><span class="desc">сдвиги на 10 лет, технологические ставки группы</span></div>
+        <div class="lab">Лично</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>Не отстать и не потеряться</b><span class="desc"><span class="gen">технологии как родная среда</span> вернуть внимание, учиться с ИИ, а не вместо себя</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>Остаться актуальным и защитить своих</b><span class="desc"><span class="gen">пришлось адаптироваться</span> без гонки за инструментами; дети с гаджетами, родители и мошенники</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>Понять и передать</b><span class="desc"><span class="gen">сила, которая меняет мир</span> куда технологии ведут общество, доверие, ценности для наследников</span></div>
+      </div>
+    </div>
+
+    <div class="track">
+      <h3 class="tname">Трек 3 — Лидерство и менеджмент <span>управлять на своей ступени и собой</span></h3>
+      <div class="g4 tbl">
+        <div class="lab">Карьера</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>От «делаю сам» к «через людей»</b><span class="desc">делегирование, обратная связь, найм</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>От функции к бизнесу</b><span class="desc">интересы правления, стратегия и исполнение, культура</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>Через других первых лиц</b><span class="desc">советы директоров, корпоративное управление, преемственность</span></div>
+        <div class="lab">Лично</div>
+        <div class="cell" data-tier="o" data-l="Open"><b>Знать себя</b><span class="desc">эмоциональный интеллект, стресс, трудные разговоры</span></div>
+        <div class="cell" data-tier="b" data-l="Business"><b>Цена роли</b><span class="desc">одиночество наверху, ловушки власти и эго, слепые зоны</span></div>
+        <div class="cell" data-tier="p" data-l="Private"><b>Кто я без должности</b><span class="desc">идентичность за пределами роли, наставничество</span></div>
+      </div>
+    </div>
+
+    <div class="track human">
+      <h3 class="tname">Трек 4 — Человек <span>с внешними партнёрами, события открыты всем уровням</span></h3>
+      <div class="g4 tbl">
+        <div class="lab">Общие темы</div>
+        <div class="span3" style="display:grid;gap:6px">
+          <div class="cell theme"><b>Ресурс</b><span>энергия, время, сон, здоровье, выгорание, цифровая перегрузка</span></div>
+          <div class="cell theme"><b>Окружение</b><span>свой круг, друзья, близкие, одиночество; мост поколений — младшие учат технологиям, старшие делятся опытом</span></div>
+          <div class="cell theme star"><b>Будущее ★</b><span>долгосрочный взгляд на свою жизнь: куда я иду и каким хочу стать; истории других людей о своём векторе</span></div>
+          <div class="cell theme"><b>Смысл</b><span>ценности, мировоззрение, вклад</span></div>
+          <p class="star-note">★ Здесь живёт тема индивидуальной стратегии. <a href="https://claude.ai/artifact/LBNCFnLNKjzW72X5u7mZMu">Как она устроена по уровням</a></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- second screen -->
+  <section class="more">
+    <div class="thesis">
+      <div class="eyebrow" style="color:inherit;opacity:.8">Главная идея</div>
+      <h2>Помочь человеку с его развитием: понять, где он сейчас, и дать инструменты, чтобы определить свой вектор.</h2>
+    </div>
+    <p class="note">Возраст — ориентир «чаще всего», не фильтр. Аналогия со Сбером — по логике сегментации, без цен. Треки и продукты по индивидуальной стратегии — черновики, уточняем с академиями.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+
+  var plates = document.querySelectorAll('[data-focus-btn]');
+  plates.forEach(function (pl) {
+    pl.addEventListener('click', function () {
+      var t = pl.getAttribute('data-focus-btn');
+      var on = root.getAttribute('data-focus') === t;
+      if (on) root.removeAttribute('data-focus'); else root.setAttribute('data-focus', t);
+      plates.forEach(function (p) { p.setAttribute('aria-pressed', String(!on && p === pl)); });
+    });
+  });
+
+  var dbtn = document.getElementById('toggle-desc');
+  if (dbtn) dbtn.addEventListener('click', function () {
+    var on = root.getAttribute('data-desc') === 'on';
+    if (on) root.removeAttribute('data-desc'); else root.setAttribute('data-desc', 'on');
+    dbtn.setAttribute('aria-pressed', String(!on));
+    dbtn.textContent = on ? 'Показать подробности' : 'Скрыть подробности';
+  });
+})();
+</script>
+
+</body>
+</html>
