@@ -22,6 +22,8 @@
   --l3: #2f5d50;          /* Private */
   --l3-ink: #f2f7f4;
   --accent: #b5652a;      /* individual strategy */
+  --pale: #6b7a74;        /* Private: предварительное видение */
+  --pale-2: #879490;
   --font-display: "Unbounded", "Golos Text", system-ui, sans-serif;
   --font-body: "Golos Text", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
@@ -29,12 +31,14 @@
   :root:not([data-theme="light"]) {
     --bg: #121a17; --paper: #1a2420; --ink: #e6eeea; --muted: #9db0a8; --rule: #2e3c37;
     --l1: #23332d; --l2: #3f6b5c; --l3: #8fc4b0; --l3-ink: #10201a; --accent: #e09a5f;
+    --pale: #93a39c; --pale-2: #6f817a;
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
   --bg: #121a17; --paper: #1a2420; --ink: #e6eeea; --muted: #9db0a8; --rule: #2e3c37;
   --l1: #23332d; --l2: #3f6b5c; --l3: #8fc4b0; --l3-ink: #10201a; --accent: #e09a5f;
+  --pale: #93a39c; --pale-2: #6f817a;
   color-scheme: dark;
 }
 body {
@@ -111,6 +115,14 @@ p { margin: 0; }
 .tbl > .cell { background: transparent; border: 0; border-top: 1px solid var(--rule); border-radius: 0; padding: 12px 4px; }
 .tbl > .lab { border-top: 1px solid var(--rule); padding-top: 12px; padding-bottom: 12px; }
 .tbl > .plate, .tbl > .lvlhead { margin-bottom: 10px; }
+/* Private — предварительное видение: везде бледнее */
+.plate.p, .lvlhead.p { background: transparent; color: var(--l3); border: 2px dashed var(--l3); }
+.plate.p .who { color: var(--pale); }
+.cell[data-tier="p"] { color: var(--pale); }
+.cell[data-tier="p"] small, .cell[data-tier="p"] .desc, .cell[data-tier="p"] .sub { color: var(--pale-2); }
+.lab-small { font-weight: 400; font-size: 12px; color: var(--muted); }
+.launch { font-size: 12px; color: var(--muted); }
+.cell.launch[data-tier="p"] { color: var(--pale-2); }
 .jtbd { font-style: italic; }
 .price { font-family: var(--font-display); font-size: 16px; font-weight: 700; font-variant-numeric: tabular-nums; }
 
@@ -206,7 +218,7 @@ p { margin: 0; }
       <div class="lab">Позиция<em>Leadership Pipeline: на каждом переходе меняются навыки, время и то, что считаешь своей работой</em></div>
       <div class="cell" data-tier="o" data-l="Open"><b>Специалист</b><small>результат своими руками</small><b>Руководитель группы</b><small>результат через людей</small><b>Руководитель руководителей</b><small>выбирать и растить руководителей</small></div>
       <div class="cell" data-tier="b" data-l="Business"><b>Руководитель функции</b><small>стратегия функции, вес в правлении</small><b>Руководитель бизнеса, CEO</b><small>думать прибылью, а не функцией</small></div>
-      <div class="cell" data-tier="p" data-l="Private"><b>Руководитель группы компаний</b><small>портфель, капитал, растить гендиректоров</small><b>Первое лицо корпорации</b><small>видение, внешний мир, преемник</small><b>Собственник, совет директоров, инвестор</b></div>
+      <div class="cell" data-tier="p" data-l="Private"><b>Руководитель группы компаний</b><small>портфель, капитал, растить гендиректоров</small><b>Первое лицо корпорации</b><small>видение, внешний мир, преемник</small><b>Собственник, совет директоров, инвестор</b><small>влиять через совет и капитал</small></div>
 
       <div class="lab">Ключевая идея<em>карьера — что осваиваем и где ловушка; лично — главный вопрос этапа и где ловушка</em></div>
       <div class="cell" data-tier="o" data-l="Open"><span class="sub">карьера</span><b>Состояться как управленец</b><small><b>осваиваем:</b> ставить задачи, делегировать, давать обратную связь, нанимать</small><small><b>ловушка:</b> продолжать делать работу за команду</small><span class="sub">лично</span><b>Доказать себе и найти своё</b><small><b>вопрос:</b> чего я стою и что по-настоящему моё?</small><small><b>ловушка:</b> жить чужими ожиданиями и гнаться за статусом</small></div>
@@ -256,7 +268,12 @@ p { margin: 0; }
       <div class="lab">Цена</div>
       <div class="cell" data-tier="o" data-l="Open"><span class="price">9900 ₽ / год</span><small>выпускникам СУ — 1 ₽</small></div>
       <div class="cell" data-tier="b" data-l="Business"><span class="price">420 000 ₽ / год</span><small>выпускникам — лимитированный доступ и спецоффер</small></div>
-      <div class="cell" data-tier="p" data-l="Private"><span class="price">TBD</span><small>собираем позже</small></div>
+      <div class="cell" data-tier="p" data-l="Private"><span class="price">TBD</span></div>
+
+      <div class="lab lab-small">Запуск</div>
+      <div class="cell launch" data-tier="o" data-l="Open">Q1 2027</div>
+      <div class="cell launch" data-tier="b" data-l="Business">Q1 2027</div>
+      <div class="cell launch" data-tier="p" data-l="Private">Q3 2027</div>
     </div>
   </section>
 
@@ -315,7 +332,7 @@ p { margin: 0; }
           <div class="cell theme"><b>Окружение</b><span>свой круг, друзья, близкие, одиночество; мост поколений — младшие учат технологиям, старшие делятся опытом</span></div>
           <div class="cell theme star"><b>Будущее ★</b><span>долгосрочный взгляд на свою жизнь: куда я иду и каким хочу стать; истории других людей о своём векторе</span></div>
           <div class="cell theme"><b>Смысл</b><span>ценности, мировоззрение, вклад</span></div>
-          <p class="star-note">★ Здесь живёт тема индивидуальной стратегии. <a href="https://claude.ai/artifact/LBNCFnLNKjzW72X5u7mZMu">Как она устроена по уровням</a></p>
+          <p class="star-note">★ <b>Будущее</b> — тема индивидуальной стратегии. Четыре шага по кругу: актуализация, диагностика, формирование, поддержка. Под них собираем бандлы и продукты для каждого уровня. <a href="https://claude.ai/artifact/LBNCFnLNKjzW72X5u7mZMu">Как она устроена по уровням</a></p>
         </div>
         <div class="lab">Формат<em>например</em></div>
         <div class="cell" data-tier="o" data-l="Open">прямой эфир, онлайн-разговор с экспертом</div>
